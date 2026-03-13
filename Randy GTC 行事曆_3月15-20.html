@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3月15–20日行事曆</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Arial', sans-serif; background: #F0F4F8; padding: 16px; }
+
+  h1 {
+    text-align: center;
+    background: linear-gradient(135deg, #1A5276, #2980B9);
+    color: white;
+    padding: 14px;
+    border-radius: 10px 10px 0 0;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+  }
+  .subtitle {
+    text-align: center;
+    background: #EBF5FB;
+    color: #1A5276;
+    font-size: 12px;
+    padding: 6px;
+    border-bottom: 2px solid #2980B9;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  table { width: 100%; border-collapse: collapse; background: white; }
+
+  th {
+    padding: 10px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  th.time-pdt { background: #1F618D; min-width: 80px; }
+  th.time-tst { background: #1E8449; min-width: 80px; }
+  th.day-week  { background: #2980B9; min-width: 120px; }
+  th.day-sun   { background: #7D3C98; min-width: 120px; }
+
+  td { border: 1px solid #D5D8DC; vertical-align: top; font-size: 12px; }
+
+  td.pdt {
+    background: #D6EAF8;
+    text-align: center;
+    font-weight: bold;
+    color: #1A5276;
+    padding: 6px 4px;
+    white-space: nowrap;
+  }
+  td.tst {
+    background: #D5F5E3;
+    text-align: center;
+    font-size: 11px;
+    color: #1E8449;
+    padding: 6px 4px;
+    white-space: nowrap;
+  }
+  td.tst.next-day { color: #884EA0; font-weight: bold; }
+
+  td.event {
+    padding: 0;
+    min-height: 34px;
+    background: #FDFEFE;
+  }
+  td.event.alt      { background: #F4F6F7; }
+  td.event.sun      { background: #F5EEF8; }
+  td.event.sun.alt  { background: #EDE0F4; }
+
+  td.event [contenteditable] {
+    display: block;
+    width: 100%;
+    min-height: 34px;
+    padding: 5px 6px;
+    outline: none;
+    font-size: 12px;
+    color: #2C3E50;
+    line-height: 1.4;
+    cursor: text;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  td.event [contenteditable]:focus {
+    border-color: #2980B9;
+    background: #EBF5FB;
+  }
+  td.event.sun [contenteditable]:focus {
+    border-color: #884EA0;
+    background: #F5EEF8;
+  }
+
+  /* Flight blocks */
+  .flight-block {
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+  }
+  .flight-block.take-off {
+    background: linear-gradient(135deg, #1A5276 0%, #2980B9 100%);
+    color: white;
+    border-left: 4px solid #F39C12;
+  }
+  .flight-block.arrive {
+    background: linear-gradient(135deg, #1E8449 0%, #27AE60 100%);
+    color: white;
+    border-left: 4px solid #F1C40F;
+  }
+  .flight-block.depart-return {
+    background: linear-gradient(135deg, #784212 0%, #E67E22 100%);
+    color: white;
+    border-left: 4px solid #F1C40F;
+  }
+  .flight-block .fn     { font-size: 13px; margin-bottom: 2px; }
+  .flight-block .detail { font-size: 10px; opacity: 0.9; font-weight: normal; }
+
+  /* Deadline / warning block */
+  .deadline-block {
+    background: linear-gradient(135deg, #922B21, #E74C3C);
+    color: white;
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-left: 4px solid #F9E79F;
+    cursor: default;
+    user-select: none;
+  }
+  .deadline-block .fn     { font-size: 13px; margin-bottom: 2px; }
+  .deadline-block .detail { font-size: 10px; opacity: 0.9; font-weight: normal; }
+
+  /* Schedule / logistics block */
+  .schedule-block {
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+  }
+  .schedule-block.customs {
+    background: linear-gradient(135deg, #515A5A, #717D7E);
+    color: white;
+    border-left: 4px solid #AED6F1;
+  }
+  .schedule-block.transit {
+    background: linear-gradient(135deg, #6E2F8E, #9B59B6);
+    color: white;
+    border-left: 4px solid #F8C471;
+  }
+  .schedule-block .fn     { font-size: 12px; margin-bottom: 2px; }
+  .schedule-block .detail { font-size: 10px; opacity: 0.9; font-weight: normal; }
+
+  /* GTC session block */
+  .session-block {
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    background: linear-gradient(135deg, #6D4C00, #F39C12);
+    color: white;
+    border-left: 4px solid #76D7C4;
+  }
+  .session-block .fn     { font-size: 12px; margin-bottom: 2px; }
+  .session-block .detail { font-size: 10px; opacity: 0.9; font-weight: normal; }
+
+  /* Press / media event block */
+  .press-block {
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    background: linear-gradient(135deg, #4A235A, #8E44AD);
+    color: white;
+    border-left: 4px solid #F8C471;
+  }
+  .press-block .fn     { font-size: 12px; margin-bottom: 2px; }
+  .press-block .detail { font-size: 10px; opacity: 0.9; font-weight: normal; }
+
+  /* Dinner / social event block */
+  .dinner-block {
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    background: linear-gradient(135deg, #78281F, #C0392B);
+    color: white;
+    border-left: 4px solid #FAD7A0;
+  }
+  .dinner-block .fn     { font-size: 12px; margin-bottom: 2px; }
+  .dinner-block .detail { font-size: 10px; opacity: 0.9; font-weight: normal; }
+
+  /* Expo / exhibition block */
+  .expo-block {
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    background: repeating-linear-gradient(
+      135deg,
+      #0B3D2E,
+      #0B3D2E 8px,
+      #117A65 8px,
+      #117A65 16px
+    );
+    color: #D1F2EB;
+    border-left: 4px solid #58D68D;
+  }
+  .expo-block .fn     { font-size: 12px; margin-bottom: 2px; }
+  .expo-block .detail { font-size: 10px; opacity: 0.85; font-weight: normal; }
+
+  /* Client meeting block */
+  .meeting-block {
+    padding: 5px 7px;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.5;
+    min-height: 34px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+    background: linear-gradient(135deg, #0E6655, #1ABC9C);
+    color: white;
+    border-left: 4px solid #F9E79F;
+  }
+  .meeting-block .fn     { font-size: 12px; margin-bottom: 2px; }
+  .meeting-block .detail { font-size: 10px; opacity: 0.9; font-weight: normal; }
+
+  .inflight-block {
+    background: repeating-linear-gradient(
+      45deg,
+      #D6EAF8, #D6EAF8 6px,
+      #EBF5FB 6px, #EBF5FB 12px
+    );
+    color: #1A5276;
+    padding: 4px 7px;
+    font-size: 11px;
+    font-style: italic;
+    min-height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-left: 3px solid #2980B9;
+  }
+
+  .notes-header {
+    background: #1A5276;
+    color: white;
+    font-weight: bold;
+    font-size: 13px;
+    padding: 9px 12px;
+    border-top: 3px solid #117A65;
+    margin-top: 10px;
+    border-radius: 6px 6px 0 0;
+  }
+  .notes-body {
+    background: #F4F6F7;
+    border: 1px solid #D5D8DC;
+    border-radius: 0 0 10px 10px;
+  }
+  .notes-input {
+    width: 100%;
+    min-height: 70px;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    color: #2C3E50;
+    resize: vertical;
+    outline: none;
+    font-family: Arial, sans-serif;
+  }
+
+  .legend {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 8px 0;
+    font-size: 11px;
+    color: #555;
+    flex-wrap: wrap;
+    padding: 6px 10px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .legend span { display: flex; align-items: center; gap: 4px; }
+  .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  /* ── MPC Guide ── */
+  .mpc-section {
+    margin-top: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .mpc-header {
+    background: linear-gradient(135deg, #1A5276, #117A65);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.4px;
+  }
+  .mpc-header-sub {
+    font-size: 11px;
+    font-weight: normal;
+    opacity: 0.85;
+    margin-left: auto;
+  }
+  .mpc-body {
+    background: white;
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mpc-phase {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #D5D8DC;
+  }
+  .mpc-phase-title {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+  }
+  .mpc-phase-title.blue  { background: linear-gradient(135deg, #1F618D, #2980B9); }
+  .mpc-phase-title.green { background: linear-gradient(135deg, #1E8449, #27AE60); }
+  .mpc-phase-content {
+    padding: 10px 14px;
+    background: #FDFEFE;
+  }
+  .mpc-step {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 9px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: #2C3E50;
+    line-height: 1.5;
+  }
+  .mpc-step:last-child { margin-bottom: 0; }
+  .mpc-num {
+    background: #2980B9;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .mpc-phase-title.green ~ .mpc-phase-content .mpc-num { background: #1E8449; }
+  .mpc-step-content { flex: 1; }
+  .mpc-step-content strong { color: #1A5276; }
+  .mpc-sub {
+    margin-top: 5px;
+    padding-left: 10px;
+    border-left: 2px solid #AED6F1;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .mpc-sub li { margin-bottom: 3px; list-style: none; padding-left: 0; }
+  .mpc-sub li::before { content: "• "; color: #2980B9; }
+  .mpc-tip {
+    background: #FFFDE7;
+    border: 1px solid #F9E79F;
+    border-left: 4px solid #D4AC0D;
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 11.5px;
+    color: #7D6608;
+    line-height: 1.55;
+  }
+  .mpc-tip strong { color: #784212; }
+  .mpc-warn {
+    background: #FEF9E7;
+    border: 1px solid #FDEBD0;
+    border-left: 4px solid #E67E22;
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 11.5px;
+    color: #784212;
+    line-height: 1.55;
+  }
+
+  /* ── Hotel Section ── */
+  .hotel-section {
+    margin-top: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .hotel-header {
+    background: linear-gradient(135deg, #6C3483, #A569BD);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.4px;
+  }
+  .hotel-header-sub {
+    font-size: 11px;
+    font-weight: normal;
+    opacity: 0.85;
+    margin-left: auto;
+  }
+  .hotel-body {
+    background: white;
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .hotel-card {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #D5D8DC;
+  }
+  .hotel-card-title {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+  }
+  .hotel-card-title.purple { background: linear-gradient(135deg, #6C3483, #8E44AD); }
+  .hotel-card-title.teal   { background: linear-gradient(135deg, #117A65, #1ABC9C); }
+  .hotel-card-title.orange { background: linear-gradient(135deg, #BA4A00, #E67E22); }
+  .hotel-card-title.navy   { background: linear-gradient(135deg, #1B4F72, #2E86C1); }
+  .hotel-card-content {
+    padding: 10px 14px;
+    background: #FDFEFE;
+    font-size: 12px;
+    color: #2C3E50;
+    line-height: 1.6;
+  }
+  .hotel-info-grid {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 4px 10px;
+    font-size: 12px;
+  }
+  .hotel-info-grid dt {
+    font-weight: bold;
+    color: #6C3483;
+    white-space: nowrap;
+  }
+  .hotel-info-grid dd { color: #2C3E50; margin: 0; }
+  .hotel-tip-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 9px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: #2C3E50;
+    line-height: 1.5;
+  }
+  .hotel-tip-item:last-child { margin-bottom: 0; }
+  .hotel-tip-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+    width: 22px;
+    text-align: center;
+    margin-top: 1px;
+  }
+  .hotel-tip-text { flex: 1; }
+  .hotel-tip-text strong { color: #1A5276; }
+  .hotel-tip-sub {
+    margin-top: 4px;
+    padding-left: 10px;
+    border-left: 2px solid #D7BDE2;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .hotel-tip-sub li { margin-bottom: 3px; list-style: none; }
+  .hotel-tip-sub li::before { content: "• "; color: #8E44AD; }
+  .hotel-dialogue {
+    background: #F8F4FC;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #E8DAEF;
+  }
+  .hotel-dialogue:last-child { margin-bottom: 0; }
+  .hotel-dialogue-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #6C3483;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .hotel-dialogue-line {
+    font-size: 11.5px;
+    line-height: 1.6;
+    margin-bottom: 4px;
+    display: flex;
+    gap: 6px;
+  }
+  .hotel-dialogue-line:last-child { margin-bottom: 0; }
+  .hdl-role {
+    font-weight: bold;
+    flex-shrink: 0;
+    min-width: 38px;
+  }
+  .hdl-role.staff { color: #2874A6; }
+  .hdl-role.you { color: #8E44AD; }
+  .hdl-en { color: #2C3E50; }
+  .hdl-zh { color: #888; font-size: 10.5px; }
+  .hotel-warn {
+    background: #FEF9E7;
+    border: 1px solid #FDEBD0;
+    border-left: 4px solid #E67E22;
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 11.5px;
+    color: #784212;
+    line-height: 1.55;
+  }
+
+  /* ── Dining Section ── */
+  .dining-section {
+    margin-top: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .dining-header {
+    background: linear-gradient(135deg, #922B21, #E74C3C);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.4px;
+  }
+  .dining-header-sub {
+    font-size: 11px;
+    font-weight: normal;
+    opacity: 0.85;
+    margin-left: auto;
+  }
+  .dining-body {
+    background: white;
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .dining-card {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #D5D8DC;
+  }
+  .dining-card-title {
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+  }
+  .dining-card-title.red    { background: linear-gradient(135deg, #922B21, #C0392B); }
+  .dining-card-title.brown  { background: linear-gradient(135deg, #6E2C00, #A04000); }
+  .dining-card-title.green  { background: linear-gradient(135deg, #1E8449, #27AE60); }
+  .dining-card-title.navy   { background: linear-gradient(135deg, #1B4F72, #2E86C1); }
+  .dining-card-title.amber  { background: linear-gradient(135deg, #7D6608, #D4AC0D); }
+  .dining-card-content {
+    padding: 10px 14px;
+    background: #FDFEFE;
+    font-size: 12px;
+    color: #2C3E50;
+    line-height: 1.6;
+  }
+  .dining-tip-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 9px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: #2C3E50;
+    line-height: 1.5;
+  }
+  .dining-tip-item:last-child { margin-bottom: 0; }
+  .dining-tip-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+    width: 22px;
+    text-align: center;
+    margin-top: 1px;
+  }
+  .dining-tip-text { flex: 1; }
+  .dining-tip-text strong { color: #922B21; }
+  .dining-tip-sub {
+    margin-top: 4px;
+    padding-left: 10px;
+    border-left: 2px solid #FADBD8;
+    font-size: 11px;
+    color: #555;
+    line-height: 1.5;
+  }
+  .dining-tip-sub li { margin-bottom: 3px; list-style: none; }
+  .dining-tip-sub li::before { content: "• "; color: #C0392B; }
+  .dining-dialogue {
+    background: #FEF9F9;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    border: 1px solid #FADBD8;
+  }
+  .dining-dialogue:last-child { margin-bottom: 0; }
+  .dining-dialogue-title {
+    font-size: 11px;
+    font-weight: bold;
+    color: #922B21;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .dining-dialogue-line {
+    font-size: 11.5px;
+    line-height: 1.6;
+    margin-bottom: 4px;
+    display: flex;
+    gap: 6px;
+  }
+  .dining-dialogue-line:last-child { margin-bottom: 0; }
+  .ddl-role {
+    font-weight: bold;
+    flex-shrink: 0;
+    min-width: 42px;
+  }
+  .ddl-role.staff { color: #1A5276; }
+  .ddl-role.you   { color: #922B21; }
+  .ddl-en { color: #2C3E50; }
+  .ddl-zh { color: #888; font-size: 10.5px; }
+  .dining-warn {
+    background: #FEF9E7;
+    border: 1px solid #FDEBD0;
+    border-left: 4px solid #E67E22;
+    border-radius: 6px;
+    padding: 9px 12px;
+    font-size: 11.5px;
+    color: #784212;
+    line-height: 1.55;
+  }
+  .tip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    margin-top: 4px;
+  }
+  .tip-table th {
+    background: #FADBD8;
+    color: #922B21;
+    padding: 5px 8px;
+    text-align: left;
+    font-weight: bold;
+    border: 1px solid #F1948A;
+  }
+  .tip-table td {
+    padding: 5px 8px;
+    border: 1px solid #FDEBD0;
+    vertical-align: top;
+    color: #2C3E50;
+    background: white;
+  }
+  .tip-table tr:nth-child(even) td { background: #FEF9F9; }
+
+  /* ── Conflict Sessions ── */
+  .conflict-section {
+    margin-top: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .conflict-header {
+    background: linear-gradient(135deg, #7D6608, #D4AC0D);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.4px;
+  }
+  .conflict-header-sub {
+    font-size: 11px;
+    font-weight: normal;
+    opacity: 0.85;
+    margin-left: auto;
+  }
+  .conflict-body {
+    background: white;
+    padding: 12px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .conflict-item {
+    display: flex;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 7px;
+    background: #FEFDF0;
+    border-left: 4px solid #D4AC0D;
+    border: 1px solid #F9E79F;
+    border-left: 4px solid #D4AC0D;
+    align-items: flex-start;
+  }
+  .conflict-item:hover { background: #FEF9E7; }
+  .conflict-badge-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    min-width: 44px;
+  }
+  .conflict-day {
+    font-size: 10px;
+    font-weight: bold;
+    background: #D4AC0D;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 6px;
+    white-space: nowrap;
+  }
+  .conflict-time {
+    font-size: 10px;
+    color: #7D6608;
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .conflict-info { flex: 1; }
+  .conflict-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #2C3E50;
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+  .conflict-detail {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.45;
+  }
+  .conflict-reason {
+    font-size: 10px;
+    color: #E67E22;
+    font-weight: bold;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  /* ── Preparation Checklist ── */
+  .prep-section {
+    margin-top: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+  .prep-header {
+    background: linear-gradient(135deg, #1B2631, #117A65);
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.4px;
+  }
+  .prep-header-sub {
+    font-size: 11px;
+    font-weight: normal;
+    opacity: 0.8;
+    margin-left: auto;
+  }
+  .prep-body {
+    background: white;
+    padding: 14px 16px 8px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px 22px;
+  }
+  .prep-group { margin-bottom: 8px; }
+  .prep-group-title {
+    font-size: 12px;
+    font-weight: bold;
+    color: #1A5276;
+    border-bottom: 2px solid #AED6F1;
+    padding-bottom: 4px;
+    margin-bottom: 7px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .prep-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #2C3E50;
+    line-height: 1.45;
+  }
+  .prep-item input[type="checkbox"] {
+    margin-top: 2px;
+    accent-color: #2980B9;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .prep-item label { cursor: pointer; user-select: none; flex: 1; }
+  .prep-item input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+    color: #A0A0A0;
+  }
+  .badge {
+    font-size: 9.5px;
+    font-weight: bold;
+    padding: 1px 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .badge-must { background: #E74C3C; color: white; }
+  .badge-note { background: #E67E22; color: white; }
+  .badge-rec  { background: #27AE60; color: white; }
+
+  .prep-progress {
+    background: #EBF5FB;
+    border-top: 1px solid #D5D8DC;
+    padding: 7px 14px;
+    font-size: 11px;
+    color: #1A5276;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .progress-bar-wrap {
+    flex: 1;
+    background: #D6EAF8;
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #27AE60, #2ECC71);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+  }
+  #progressText { white-space: nowrap; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<h1>🗓 3月 15–20日 行事曆 ｜ Randy</h1>
+<div class="subtitle">⏱ 美西時間 PDT（UTC-7）｜台灣時間 TST（UTC+8）・差距 +15 小時・(+1) 表示隔天</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:#1A5276"></span> TPE 起飛</span>
+  <span><span class="dot" style="background:#1E8449"></span> SFO 抵達</span>
+  <span><span class="dot" style="background:#E67E22"></span> SFO 回程起飛</span>
+  <span><span class="dot" style="background:#D6EAF8;border:1px solid #2980B9"></span> 飛行中</span>
+  <span>💡 空白格點擊可輸入</span>
+</div>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr>
+      <th class="time-pdt">美西時間<br>(PDT)</th>
+      <th class="time-tst">台灣時間<br>(TST)</th>
+      <th class="day-sun">星期日<br>3/15</th>
+      <th class="day-week">星期一<br>3/16</th>
+      <th class="day-week">星期二<br>3/17</th>
+      <th class="day-week">星期三<br>3/18</th>
+      <th class="day-week">星期四<br>3/19</th>
+      <th class="day-week">星期五<br>3/20</th>
+    </tr>
+  </thead>
+  <tbody id="calBody"></tbody>
+</table>
+</div>
+
+<div class="notes-header">📝 備忘 / 待辦事項</div>
+<div class="notes-body">
+  <textarea class="notes-input">• BR018 訂位代號：DTG8ZY
+• BR007 抵達台北 TPE 航站2，預計 3/21（六）17:10 TST</textarea>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     SFO 入境 Mobile Passport Control 操作流程
+════════════════════════════════════════════════════ -->
+<div class="mpc-section">
+  <div class="mpc-header">
+    🛂 SFO 入境｜Mobile Passport Control（MPC）App 操作流程
+    <span class="mpc-header-sub">3/15 抵達 SFO 後參考・QR Code 有效期僅 4 小時，下飛機後再送出</span>
+  </div>
+  <div class="mpc-body">
+
+    <!-- 第二階段 -->
+    <div class="mpc-phase">
+      <div class="mpc-phase-title blue">✈️ 第二階段：抵達 SFO 時（下飛機、拿手機、連 Wi-Fi）</div>
+      <div class="mpc-phase-content">
+        <div class="mpc-step">
+          <div class="mpc-num">1</div>
+          <div class="mpc-step-content">
+            <strong>打開 App，點選「New Submission」</strong>
+            <div class="mpc-sub">
+              <li>選擇 <strong>Port of Entry</strong>：搜尋 <code>SFO</code> 或 <code>San Francisco International Airport</code></li>
+              <li>選擇 <strong>Terminal</strong>：台灣飛過去一般選 <code>International Terminal</code></li>
+            </div>
+          </div>
+        </div>
+        <div class="mpc-step">
+          <div class="mpc-num">2</div>
+          <div class="mpc-step-content">
+            <strong>選擇成員</strong>
+            <div class="mpc-sub">
+              <li>勾選剛才建立好的那些人（你自己，或加上家人）</li>
+            </div>
+          </div>
+        </div>
+        <div class="mpc-step">
+          <div class="mpc-num">3</div>
+          <div class="mpc-step-content">
+            <strong>回答 6 個「海關申報問題」（Questions）</strong>
+            <div class="mpc-sub">
+              <li>全部都是 Yes / No，一般觀光客大多勾 <strong>No</strong></li>
+              <li>關鍵題：「Do you have any food?」</li>
+              <li>如果帶了泡麵、鳳梨酥、茶葉、餅乾 → 強烈建議勾 <strong>Yes</strong></li>
+              <li>勾 Yes 不代表會被罰，只是待會官員問你帶什麼時，誠實說 "Snacks" 或 "Tea" 即可</li>
+            </div>
+          </div>
+        </div>
+        <div class="mpc-step">
+          <div class="mpc-num">4</div>
+          <div class="mpc-step-content">
+            <strong>拍自拍照（Take a Selfie）</strong>
+            <div class="mpc-sub">
+              <li>App 會要你拍一張大頭照；不用太漂亮，背景乾淨、臉清楚就好</li>
+            </div>
+          </div>
+        </div>
+        <div class="mpc-step">
+          <div class="mpc-num">5</div>
+          <div class="mpc-step-content">
+            <strong>送出（Submit）→ 取得 QR Code</strong>
+            <div class="mpc-sub">
+              <li>按下去！你會得到一個 <strong>QR Code</strong></li>
+              <li>⚠️ 這個 Code 的有效期限只有 <strong>4 小時</strong>，所以一定要下飛機後再送出</li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三階段 -->
+    <div class="mpc-phase">
+      <div class="mpc-phase-title green">🏛 第三階段：在 SFO 海關大廳</div>
+      <div class="mpc-phase-content">
+        <div class="mpc-step">
+          <div class="mpc-num">1</div>
+          <div class="mpc-step-content">
+            <strong>找路標</strong>
+            <div class="mpc-sub">
+              <li>走進大廳，你會看到很多人排那種像貪食蛇一樣的長龍。<strong>別跟著排！</strong></li>
+              <li>抬頭找一個藍色的招牌，寫著 <strong>"MPC"</strong> 或 <strong>"Mobile Passport Control"</strong></li>
+            </div>
+          </div>
+        </div>
+        <div class="mpc-step">
+          <div class="mpc-num">2</div>
+          <div class="mpc-step-content">
+            <strong>出示 QR Code</strong>
+            <div class="mpc-sub">
+              <li>走 MPC 專用通道，直接把手機給官員看</li>
+              <li>他會掃描你的 Code，確認一下護照，問一兩個問題（比如來美國做什麼？），就結束了</li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mpc-warn">
+      ⚠️ <strong>重要提醒：</strong>QR Code 有效期僅 4 小時——請在 <strong>降落後、排隊前</strong>才送出，不要在台灣或飛機上提早操作。如果想先了解 6 個英文申報問題的具體內容，可以事先查閱，免得在機場海關前緊張。
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     飯店住宿資訊 & 美國飯店入住須知
+════════════════════════════════════════════════════ -->
+<div class="hotel-section">
+  <div class="hotel-header">
+    🏨 飯店住宿｜The Domain Hotel
+    <span class="hotel-header-sub">Sunnyvale・3/15 (日) 15:00 入住 → 3/20 (五) 12:00 退房・5 晚</span>
+  </div>
+  <div class="hotel-body">
+
+    <!-- 訂房資訊 -->
+    <div class="hotel-card">
+      <div class="hotel-card-title purple">📋 訂房資訊</div>
+      <div class="hotel-card-content">
+        <dl class="hotel-info-grid">
+          <dt>飯店名稱</dt><dd>The Domain Hotel ⭐⭐⭐⭐</dd>
+          <dt>地址</dt><dd>1085 E El Camino Real, Sunnyvale, CA 94087</dd>
+          <dt>電話</dt><dd>+1-408-247-0800</dd>
+          <dt>訂單編號</dt><dd>1622924707358166</dd>
+          <dt>PIN</dt><dd>1969（勿外洩）</dd>
+          <dt>入住者</dt><dd>Shau-Wei Yang</dd>
+          <dt>房型</dt><dd>Deluxe King Room・1 大床・禁菸・32m²・有窗</dd>
+          <dt>入住</dt><dd>3/15（日）15:00 後</dd>
+          <dt>退房</dt><dd>3/20（五）12:00 前</dd>
+          <dt>早餐</dt><dd>3/16–3/20 每天含 2 人份早餐</dd>
+          <dt>總價</dt><dd>US$1,443.18（已線上預付）</dd>
+          <dt>訂房來源</dt><dd>Trip.com</dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- 美國飯店入住注意事項 -->
+    <div class="hotel-card">
+      <div class="hotel-card-title teal">💡 美國飯店入住注意事項</div>
+      <div class="hotel-card-content">
+
+        <div class="hotel-tip-item">
+          <div class="hotel-tip-icon">💳</div>
+          <div class="hotel-tip-text">
+            <strong>Check-in 時需出示護照 + 信用卡</strong>
+            <div class="hotel-tip-sub">
+              <li>即使已預付全額，飯店仍會要求一張信用卡做<strong>押金預授權（incidentals hold）</strong>，通常 $50–$100/晚</li>
+              <li>退房後若無額外消費，預授權會在 3–5 個工作天自動解除</li>
+              <li>建議攜帶 <strong>Visa / Mastercard 信用卡</strong>，部分飯店不收 JCB</li>
+            </div>
+          </div>
+        </div>
+
+        <div class="hotel-tip-item">
+          <div class="hotel-tip-icon">💰</div>
+          <div class="hotel-tip-text">
+            <strong>小費文化（Tipping）</strong>
+            <div class="hotel-tip-sub">
+              <li><strong>房務清潔：</strong>每天放 $2–$5 在枕頭旁或桌上，附字條寫 "Housekeeping, thank you"</li>
+              <li><strong>行李員（Bellboy）：</strong>每件行李 $1–$2</li>
+              <li><strong>代客泊車（Valet）：</strong>取車時 $2–$5（此行應無需要）</li>
+              <li><strong>禮賓部（Concierge）：</strong>如有特別幫忙，$5–$10</li>
+            </div>
+          </div>
+        </div>
+
+        <div class="hotel-tip-item">
+          <div class="hotel-tip-icon">🚿</div>
+          <div class="hotel-tip-text">
+            <strong>備品須知</strong>
+            <div class="hotel-tip-sub">
+              <li>美國飯店通常<strong>不提供</strong>：牙刷、牙膏、拖鞋、梳子 → 請自備或提前在行李打包</li>
+              <li>一般<strong>會提供</strong>：浴巾、洗髮乳、沐浴乳、吹風機、咖啡機</li>
+              <li>4 星飯店如 The Domain 可能會有拖鞋，但不保證</li>
+            </div>
+          </div>
+        </div>
+
+        <div class="hotel-tip-item">
+          <div class="hotel-tip-icon">🔌</div>
+          <div class="hotel-tip-text">
+            <strong>電壓 & 插座</strong>
+            <div class="hotel-tip-sub">
+              <li>美國電壓 <strong>120V / 60Hz</strong>，插座為兩扁平片型（Type A/B）</li>
+              <li>台灣帶去的充電器（手機、筆電）通常支援 100–240V，可直接使用</li>
+              <li>如帶吹風機、電棒等大功率電器，需確認是否支援 120V</li>
+            </div>
+          </div>
+        </div>
+
+        <div class="hotel-tip-item">
+          <div class="hotel-tip-icon">🔥</div>
+          <div class="hotel-tip-text">
+            <strong>安全 & 其他</strong>
+            <div class="hotel-tip-sub">
+              <li>入住第一件事：確認<strong>逃生路線</strong>和最近的逃生門位置</li>
+              <li>美國飯店室內全面<strong>禁菸</strong>，違者罰 $200–$500</li>
+              <li>走廊的 <strong>Ice Machine</strong>（製冰機）免費使用，可拿房內的 ice bucket 去裝</li>
+              <li><strong>Do Not Disturb</strong> 掛門牌 → 房務不會進房打掃</li>
+              <li>退房日如需延遲退房，前一晚致電前台詢問 late check-out（The Domain 可能免費延至 13:00–14:00）</li>
+            </div>
+          </div>
+        </div>
+
+        <div class="hotel-tip-item">
+          <div class="hotel-tip-icon">📶</div>
+          <div class="hotel-tip-text">
+            <strong>Wi-Fi & 停車</strong>
+            <div class="hotel-tip-sub">
+              <li>The Domain Hotel 提供免費 Wi-Fi，check-in 時會拿到密碼或連接名稱</li>
+              <li>如需停車，Sunnyvale 地區飯店通常有免費停車場（先確認有無 self-parking）</li>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 常用英文對話 -->
+    <div class="hotel-card">
+      <div class="hotel-card-title orange">🗣 飯店常用英文對話</div>
+      <div class="hotel-card-content">
+
+        <div class="hotel-dialogue">
+          <div class="hotel-dialogue-title">🔑 場景一：Check-in（辦理入住）</div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Hi, welcome to The Domain Hotel. Do you have a reservation?</span><br><span class="hdl-zh">你好，歡迎來到 The Domain Hotel。請問有訂房嗎？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Yes, I have a reservation under Shau-Wei Yang.</span><br><span class="hdl-zh">有的，訂房在 Shau-Wei Yang 名下。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">May I see your passport and a credit card, please?</span><br><span class="hdl-zh">可以看一下你的護照和信用卡嗎？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Sure, here you go.</span><br><span class="hdl-zh">好的，在這裡。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">We'll put a hold on your card for incidentals. Your room is on the 3rd floor. Here's your key card. Breakfast is served from 7 to 10 AM in the restaurant.</span><br><span class="hdl-zh">我們會在你的卡上做一筆押金預授權。你的房間在 3 樓。這是你的房卡。早餐在餐廳供應，時間是早上 7 點到 10 點。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Great, thank you! Is Wi-Fi included?</span><br><span class="hdl-zh">太好了，謝謝！有含 Wi-Fi 嗎？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Yes, the Wi-Fi is complimentary. The network name and password are in your room.</span><br><span class="hdl-zh">有的，Wi-Fi 是免費的。房間裡有網路名稱和密碼。</span></span></div>
+        </div>
+
+        <div class="hotel-dialogue">
+          <div class="hotel-dialogue-title">🛏 場景二：要求額外備品</div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Hi, could I get some extra towels / an extra pillow / a toothbrush, please?</span><br><span class="hdl-zh">你好，可以多給我一些毛巾 / 多一個枕頭 / 一支牙刷嗎？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Of course. I'll have someone bring them to your room shortly.</span><br><span class="hdl-zh">當然，我會馬上請人送到你的房間。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Thank you so much!</span><br><span class="hdl-zh">非常感謝！</span></span></div>
+        </div>
+
+        <div class="hotel-dialogue">
+          <div class="hotel-dialogue-title">🔧 場景三：房間問題反映</div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Hi, I'm in room 305. The air conditioning doesn't seem to be working. / The hot water isn't running. / The room key isn't working.</span><br><span class="hdl-zh">你好，我住 305 號房。冷氣好像壞了。/ 沒有熱水。/ 房卡刷不過。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">I'm sorry about that. I'll send maintenance / Let me reprogram your key right away.</span><br><span class="hdl-zh">非常抱歉，我馬上派維修人員過去 / 我馬上幫你重新設定房卡。</span></span></div>
+        </div>
+
+        <div class="hotel-dialogue">
+          <div class="hotel-dialogue-title">☀️ 場景四：早餐相關</div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Good morning! May I have your room number, please?</span><br><span class="hdl-zh">早安！請問你的房號是？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Room 305. Is the breakfast buffet, or do I order from the menu?</span><br><span class="hdl-zh">305 號房。早餐是自助餐還是點餐？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">It's a buffet. Please help yourself. Coffee and juice are at the station over there.</span><br><span class="hdl-zh">是自助餐，請自行取用。咖啡和果汁在那邊的吧台。</span></span></div>
+        </div>
+
+        <div class="hotel-dialogue">
+          <div class="hotel-dialogue-title">⏰ 場景五：延遲退房 & Check-out</div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Hi, I was wondering if it's possible to get a late check-out? Maybe until 2 PM?</span><br><span class="hdl-zh">你好，請問可以延遲退房嗎？大概到下午 2 點？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Let me check... Yes, we can extend it to 2 PM at no extra charge.</span><br><span class="hdl-zh">我查一下⋯可以，我們可以免費延到下午 2 點。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">I'd like to check out, please. Room 305.</span><br><span class="hdl-zh">我要退房，305 號房。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Sure. Everything looks good. Would you like a printed receipt or emailed?</span><br><span class="hdl-zh">好的，一切沒問題。你要紙本收據還是 email 寄給你？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Email is fine, thank you. Can I also store my luggage here for a few hours?</span><br><span class="hdl-zh">寄 email 就好，謝謝。我可以把行李寄放幾個小時嗎？</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Absolutely. Just leave them with the bell desk and pick them up whenever you're ready.</span><br><span class="hdl-zh">沒問題，放在行李櫃台就好，隨時可以來拿。</span></span></div>
+        </div>
+
+        <div class="hotel-dialogue">
+          <div class="hotel-dialogue-title">🚕 場景六：叫車 / 交通</div>
+          <div class="hotel-dialogue-line"><span class="hdl-role you">You:</span><span><span class="hdl-en">Could you help me call an Uber / a taxi? I'm going to the San Jose Convention Center.</span><br><span class="hdl-zh">可以幫我叫一台 Uber / 計程車嗎？我要去 San Jose Convention Center。</span></span></div>
+          <div class="hotel-dialogue-line"><span class="hdl-role staff">Staff:</span><span><span class="hdl-en">Sure! You can also use the Uber app. The pick-up point is right at the front entrance.</span><br><span class="hdl-zh">沒問題！你也可以自己用 Uber App 叫車，上車點就在大門口。</span></span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 實用短句速查 -->
+    <div class="hotel-card">
+      <div class="hotel-card-title navy">📝 實用短句速查表</div>
+      <div class="hotel-card-content">
+        <div class="hotel-info-grid" style="grid-template-columns: 1fr 1fr; gap: 6px 16px;">
+          <dt style="color:#1B4F72">Could I get a wake-up call at 7 AM?</dt><dd>可以幫我設早上 7 點 morning call 嗎？</dd>
+          <dt style="color:#1B4F72">Where is the ice machine?</dt><dd>製冰機在哪裡？</dd>
+          <dt style="color:#1B4F72">Is there a gym / pool in the hotel?</dt><dd>飯店有健身房 / 游泳池嗎？</dd>
+          <dt style="color:#1B4F72">Can I have a room away from the elevator?</dt><dd>可以給我離電梯遠一點的房間嗎？</dd>
+          <dt style="color:#1B4F72">The room next door is very noisy.</dt><dd>隔壁很吵。</dd>
+          <dt style="color:#1B4F72">Do you have a hair dryer I can borrow?</dt><dd>有吹風機可以借嗎？</dd>
+          <dt style="color:#1B4F72">What time does breakfast end?</dt><dd>早餐供應到幾點？</dd>
+          <dt style="color:#1B4F72">Is there a shuttle to the convention center?</dt><dd>有接駁車去會議中心嗎？</dd>
+          <dt style="color:#1B4F72">I locked myself out of my room.</dt><dd>我把自己鎖在門外了。</dd>
+          <dt style="color:#1B4F72">Could you charge this to my room?</dt><dd>可以記在我的房帳上嗎？</dd>
+        </div>
+      </div>
+    </div>
+
+    <div class="hotel-warn">
+      ⚠️ <strong>重要提醒：</strong>GTC 最後一天是 3/19（四），3/20（五）為退房日。退房時間 <strong>12:00</strong>、BR007 起飛時間 <strong>12:10 PDT</strong>，幾乎無縫——<strong>強烈建議 3/19 晚上打包好行李</strong>，3/20 一早辦完退房直接出發去 SFO，不要臨時手忙腳亂。機場建議提前 <strong>3 小時</strong>（09:00 前到）辦理國際線 check-in。
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     美國餐廳 & 咖啡廳注意事項
+════════════════════════════════════════════════════ -->
+<div class="dining-section">
+  <div class="dining-header">
+    🍽 美國餐廳 & 咖啡廳｜用餐須知與常用對話
+    <span class="dining-header-sub">矽谷 / 灣區適用・GTC 期間隨時參考</span>
+  </div>
+  <div class="dining-body">
+
+    <!-- 小費文化 -->
+    <div class="dining-card">
+      <div class="dining-card-title red">💰 小費文化（Tipping）— 最重要的一件事</div>
+      <div class="dining-card-content">
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">⚠️</div>
+          <div class="dining-tip-text">
+            <strong>美國餐廳小費是約定俗成的義務，不給會被認為非常失禮</strong>
+            <div class="dining-tip-sub">
+              <li>小費直接付給服務生，是他們主要收入來源（時薪可能只有 $3–5）</li>
+              <li>金額計算方式：在 <strong>稅前小計（subtotal）</strong> 上計算</li>
+            </div>
+          </div>
+        </div>
+        <table class="tip-table">
+          <tr>
+            <th>場合</th>
+            <th>建議比例</th>
+            <th>說明</th>
+          </tr>
+          <tr>
+            <td>一般餐廳（sit-down）</td>
+            <td><strong>18–20%</strong></td>
+            <td>服務普通給 18%，滿意給 20%，超好給 22–25%</td>
+          </tr>
+          <tr>
+            <td>咖啡廳（counter service）</td>
+            <td><strong>0–15%</strong></td>
+            <td>自己點、自己取餐 → 可不給；有服務員送餐 → 給 10–15%</td>
+          </tr>
+          <tr>
+            <td>外帶（takeout）</td>
+            <td><strong>0–10%</strong></td>
+            <td>刷卡機會顯示 tip 選項，可選 "No Tip" 或 "Custom" 輸入 0</td>
+          </tr>
+          <tr>
+            <td>酒吧（bar）</td>
+            <td><strong>$1–2 / 杯</strong></td>
+            <td>或總額 15–20%</td>
+          </tr>
+          <tr>
+            <td>自助餐（buffet）</td>
+            <td><strong>10%</strong></td>
+            <td>服務生有來補水或收盤子就給</td>
+          </tr>
+        </table>
+        <div class="dining-tip-item" style="margin-top:9px">
+          <div class="dining-tip-icon">💳</div>
+          <div class="dining-tip-text">
+            <strong>刷卡如何給小費</strong>
+            <div class="dining-tip-sub">
+              <li>刷卡結帳時，帳單上會有一行空白「Tip: ＿＿＿＿」，自己寫金額後再加總簽名</li>
+              <li>或刷卡機螢幕上直接選百分比 / 輸入金額</li>
+              <li>確認最後「Total」那行金額正確再簽名</li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 一般用餐流程 -->
+    <div class="dining-card">
+      <div class="dining-card-title brown">🍴 一般餐廳用餐流程</div>
+      <div class="dining-card-content">
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">1️⃣</div>
+          <div class="dining-tip-text">
+            <strong>進門等帶位（Wait to be seated）</strong>
+            <div class="dining-tip-sub">
+              <li>美國餐廳幾乎都要等服務生帶位，<strong>不要自己找位子坐</strong>（除非門口有 "Seat yourself" 的牌子）</li>
+              <li>進門後會有 Host/Hostess 問：<em>"How many?"</em>（幾位？）</li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">2️⃣</div>
+          <div class="dining-tip-text">
+            <strong>點飲料 → 點餐</strong>
+            <div class="dining-tip-sub">
+              <li>服務生通常先問飲料，再來問有沒有準備好點餐</li>
+              <li>免費飲水：說 <em>"Just water, please."</em> 即可，不需要另外付費</li>
+              <li>Refill（免費續杯）在美國非常普遍，服務生會主動來補</li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">3️⃣</div>
+          <div class="dining-tip-text">
+            <strong>用餐中</strong>
+            <div class="dining-tip-sub">
+              <li>需要服務生時，輕輕舉手或眼神接觸，不要大聲叫喊</li>
+              <li>麵包籃（bread basket）通常是免費的，但有些餐廳要另外收費，不確定可以問</li>
+              <li>食物有問題（太生、太鹹）可以客氣說出來，美國餐廳通常會換或退</li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">4️⃣</div>
+          <div class="dining-tip-text">
+            <strong>打包（To-go box）</strong>
+            <div class="dining-tip-sub">
+              <li>美國份量通常很大，吃不完直接問：<em>"Can I get a to-go box?"</em></li>
+              <li>服務生會拿容器來，自己裝或請他們幫忙裝都可以</li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">5️⃣</div>
+          <div class="dining-tip-text">
+            <strong>結帳（Check / Bill）</strong>
+            <div class="dining-tip-sub">
+              <li>美國不會主動送帳單，要主動說 <em>"Can I get the check, please?"</em></li>
+              <li>帳單通常放在一個小夾子或盤子裡送來</li>
+              <li>分開付帳（split）很常見，可以直接跟服務生說</li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 咖啡廳注意事項 -->
+    <div class="dining-card">
+      <div class="dining-card-title green">☕ 咖啡廳（Café）注意事項</div>
+      <div class="dining-card-content">
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">📋</div>
+          <div class="dining-tip-text">
+            <strong>點單流程（Counter Order）</strong>
+            <div class="dining-tip-sub">
+              <li>大多咖啡廳是自己走到櫃台點單、付錢，再等叫號或叫名字</li>
+              <li>點單時會問你的名字（for the cup），說清楚就好，外國名字可以說簡單的英文名</li>
+              <li>Starbucks、Blue Bottle、Philz Coffee 在矽谷很常見</li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">🥛</div>
+          <div class="dining-tip-text">
+            <strong>常見客製化選項</strong>
+            <div class="dining-tip-sub">
+              <li><strong>牛奶種類：</strong>whole milk（全脂）/ 2% / skim（脫脂）/ oat milk（燕麥奶）/ almond milk（杏仁奶）/ soy milk（豆漿）</li>
+              <li><strong>甜度：</strong>直接說 <em>"no sugar"</em> 或 <em>"one pump of vanilla"</em></li>
+              <li><strong>溫度：</strong>hot / iced / extra hot / warm</li>
+              <li><strong>大小：</strong>small / medium / large（Starbucks：tall / grande / venti）</li>
+              <li>不確定可以說 <em>"Just the regular / default, please."</em></li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">💺</div>
+          <div class="dining-tip-text">
+            <strong>佔位 & 工作</strong>
+            <div class="dining-tip-sub">
+              <li>咖啡廳普遍歡迎帶電腦工作，但尖峰時間（早 8–10 點）座位很搶手</li>
+              <li>長時間待著建議每隔 1–2 小時再買一杯，是不成文的禮貌</li>
+              <li>插座（outlet）不一定夠用，帶 power bank 或自備延長線</li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 飲食限制 & 點餐技巧 -->
+    <div class="dining-card">
+      <div class="dining-card-title amber">🥗 飲食限制 & 點餐技巧</div>
+      <div class="dining-card-content">
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">🔍</div>
+          <div class="dining-tip-text">
+            <strong>看不懂菜單時</strong>
+            <div class="dining-tip-sub">
+              <li>直接問 <em>"What do you recommend?"</em>（你推薦什麼？）</li>
+              <li>或 <em>"What's popular here?"</em>（這裡什麼最受歡迎？）</li>
+              <li>菜單上常見縮寫：GF = Gluten Free、V = Vegetarian、VG = Vegan</li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">🚫</div>
+          <div class="dining-tip-text">
+            <strong>飲食限制怎麼說</strong>
+            <div class="dining-tip-sub">
+              <li>不吃豬肉：<em>"I don't eat pork."</em></li>
+              <li>不吃牛肉：<em>"I don't eat beef."</em></li>
+              <li>海鮮過敏：<em>"I'm allergic to shellfish / seafood."</em></li>
+              <li>不辣：<em>"Can you make it not spicy?"</em></li>
+              <li>過敏較嚴重時一定要強調 <em>"I have a food allergy."</em>，服務生會特別處理</li>
+            </div>
+          </div>
+        </div>
+        <div class="dining-tip-item">
+          <div class="dining-tip-icon">🥩</div>
+          <div class="dining-tip-text">
+            <strong>牛排幾分熟</strong>
+            <div class="dining-tip-sub">
+              <li>Rare（一分）→ Medium Rare（三分）→ Medium（五分）→ Medium Well（七分）→ Well Done（全熟）</li>
+              <li>推薦第一次嘗試點 <strong>Medium</strong>，口感和風味平衡最好</li>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 常用對話 -->
+    <div class="dining-card">
+      <div class="dining-card-title navy">🗣 常用英文對話</div>
+      <div class="dining-card-content">
+
+        <div class="dining-dialogue">
+          <div class="dining-dialogue-title">🚪 場景一：進入餐廳 & 帶位</div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Host:</span><span><span class="ddl-en">Hi, welcome! How many in your party?</span><br><span class="ddl-zh">嗨，歡迎！請問幾位？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Just one / Two of us, please.</span><br><span class="ddl-zh">只有我一個 / 我們兩位。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Host:</span><span><span class="ddl-en">Do you have a reservation?</span><br><span class="ddl-zh">有預約嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">No, we don't. Is there a wait?</span><br><span class="ddl-zh">沒有。請問需要等位嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Host:</span><span><span class="ddl-en">About 15 minutes. Can I get your name?</span><br><span class="ddl-zh">大約 15 分鐘。可以給我你的名字嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">It's Randy.</span><br><span class="ddl-zh">Randy。</span></span></div>
+        </div>
+
+        <div class="dining-dialogue">
+          <div class="dining-dialogue-title">📖 場景二：點餐</div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Server:</span><span><span class="ddl-en">Hi, I'm Alex, I'll be your server today. Can I start you off with something to drink?</span><br><span class="ddl-zh">嗨，我是 Alex，今天由我服務。先幫你點飲料嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Just water for now, thanks. / I'll have an iced tea, please.</span><br><span class="ddl-zh">先給我水就好，謝謝。/ 我要冰紅茶。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Server:</span><span><span class="ddl-en">Are you ready to order, or do you need a few more minutes?</span><br><span class="ddl-zh">你準備好點餐了嗎，還是需要再等一下？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">I'll have the grilled salmon, please. What does it come with?</span><br><span class="ddl-zh">我要烤鮭魚。請問搭配什麼？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Server:</span><span><span class="ddl-en">It comes with roasted vegetables and mashed potatoes. Would you like to substitute the potatoes for a salad?</span><br><span class="ddl-zh">附烤蔬菜和馬鈴薯泥。你要把馬鈴薯換成沙拉嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Yes, please. And can you make it without the sauce?</span><br><span class="ddl-zh">好的，謝謝。另外可以不加醬汁嗎？</span></span></div>
+        </div>
+
+        <div class="dining-dialogue">
+          <div class="dining-dialogue-title">📦 場景三：打包 & 結帳</div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Could I get a to-go box? I can't finish this.</span><br><span class="ddl-zh">可以給我一個打包盒嗎？我吃不完。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Can I get the check when you have a moment?</span><br><span class="ddl-zh">方便的話，可以幫我結帳嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Server:</span><span><span class="ddl-en">Of course! Here you go. No rush.</span><br><span class="ddl-zh">當然！帳單在這，不急。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Can we split this? I'll pay for the salmon and he'll pay for the burger.</span><br><span class="ddl-zh">可以分開結帳嗎？我付鮭魚那份，他付漢堡那份。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Server:</span><span><span class="ddl-en">No problem, I'll bring two separate checks.</span><br><span class="ddl-zh">沒問題，我拿兩張帳單過來。</span></span></div>
+        </div>
+
+        <div class="dining-dialogue">
+          <div class="dining-dialogue-title">☕ 場景四：咖啡廳點單（Starbucks / 獨立咖啡廳）</div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Barista:</span><span><span class="ddl-en">Hi, what can I get for you?</span><br><span class="ddl-zh">嗨，你要點什麼？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Can I get a medium iced latte with oat milk, please?</span><br><span class="ddl-zh">我要一杯中杯燕麥奶冰拿鐵。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Barista:</span><span><span class="ddl-en">Any syrup or sweetener?</span><br><span class="ddl-zh">要加糖漿或甜味劑嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">No sugar, please. / One pump of vanilla, please.</span><br><span class="ddl-zh">不加糖，謝謝。/ 加一泵香草糖漿。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Barista:</span><span><span class="ddl-en">Can I get a name for the order?</span><br><span class="ddl-zh">請問名字怎麼稱呼？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Randy.</span><br><span class="ddl-zh">Randy。</span></span></div>
+        </div>
+
+        <div class="dining-dialogue">
+          <div class="dining-dialogue-title">🔄 場景五：食物有問題</div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Excuse me, I think there might be a mistake — I ordered the salmon, not the chicken.</span><br><span class="ddl-zh">不好意思，我覺得點錯了——我點的是鮭魚，不是雞肉。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Server:</span><span><span class="ddl-en">I'm so sorry about that! I'll get that fixed right away.</span><br><span class="ddl-zh">非常抱歉！我馬上幫你換。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Excuse me, this steak is a bit too rare for me. Could you cook it a little more?</span><br><span class="ddl-zh">不好意思，這牛排對我來說有點太生了，可以再煎熟一點嗎？</span></span></div>
+        </div>
+
+        <div class="dining-dialogue">
+          <div class="dining-dialogue-title">🏃 場景六：外帶 & 快餐</div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Cashier:</span><span><span class="ddl-en">Is this for here or to go?</span><br><span class="ddl-zh">內用還是外帶？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">To go, please.</span><br><span class="ddl-zh">外帶。</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role staff">Cashier:</span><span><span class="ddl-en">Would you like any sauce or condiments?</span><br><span class="ddl-zh">要醬料或調味料嗎？</span></span></div>
+          <div class="dining-dialogue-line"><span class="ddl-role you">You:</span><span><span class="ddl-en">Yes, can I get some ketchup and extra napkins?</span><br><span class="ddl-zh">好的，可以給我番茄醬和多一點餐巾紙嗎？</span></span></div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 實用短句速查 -->
+    <div class="dining-card">
+      <div class="dining-card-title red">📝 實用短句速查</div>
+      <div class="dining-card-content">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px 16px; font-size:12px;">
+          <div style="font-weight:bold;color:#922B21">Can I see the menu?</div><div>可以給我看菜單嗎？</div>
+          <div style="font-weight:bold;color:#922B21">What's today's special?</div><div>今天的特餐是什麼？</div>
+          <div style="font-weight:bold;color:#922B21">Is this dish spicy?</div><div>這道菜辣嗎？</div>
+          <div style="font-weight:bold;color:#922B21">Can I get more water?</div><div>可以再給我一些水嗎？</div>
+          <div style="font-weight:bold;color:#922B21">No onions, please.</div><div>不要洋蔥，謝謝。</div>
+          <div style="font-weight:bold;color:#922B21">Can I get the dressing on the side?</div><div>沙拉醬可以另外放嗎？</div>
+          <div style="font-weight:bold;color:#922B21">This is delicious, thank you!</div><div>這個很好吃，謝謝！</div>
+          <div style="font-weight:bold;color:#922B21">Where is the restroom?</div><div>廁所在哪裡？</div>
+          <div style="font-weight:bold;color:#922B21">Keep the change.</div><div>不用找零了。（給現金時）</div>
+          <div style="font-weight:bold;color:#922B21">It's on me. / Let me treat you.</div><div>我請客。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dining-warn">
+      ⚠️ <strong>矽谷 / Sunnyvale 特別提醒：</strong>當地亞洲餐廳非常多（台式、日式、越式皆有），且部分不需要給小費或只收現金，建議用 Yelp / Google Maps 查評價時順便確認付款方式。GTC 會場周邊午餐人潮很多，建議 11:30 前或 13:30 後再出發用餐。
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     有興趣但時間衝突的場次
+════════════════════════════════════════════════════ -->
+<div class="conflict-section">
+  <div class="conflict-header">
+    ⚡ 有興趣但時間衝突的場次
+    <span class="conflict-header-sub">僅供參考・若行程有空可補看錄影或摘要</span>
+  </div>
+  <div class="conflict-body">
+
+    <div class="conflict-item">
+      <div class="conflict-badge-wrap">
+        <span class="conflict-day">3/16 一</span>
+        <span class="conflict-time">16:00<br>–16:40</span>
+      </div>
+      <div class="conflict-info">
+        <div class="conflict-title">🏢 Transform Enterprise AI &amp; Connectivity: Cloud to Edge (QCT) [S82217]</div>
+        <div class="conflict-detail">Hilton Winchester (L1)　｜　Daphne Tsai, AI/Cloud Solution Manager &amp; Pei-Wen Wang, 5G/AI Solution Manager, QCT<br>QCT AI POD × NVIDIA：AI-native 網路、2U AI-RAN 平台（ARC-Pro）、Grace / RTX / HGX / Blackwell 整合方案</div>
+        <div class="conflict-reason">⚠️ 衝突：與 NVIDIA Inference Platform S81911（16:00–16:40）及 LITEON EX82089（16:40–16:55）時間完全重疊</div>
+      </div>
+    </div>
+
+    <div class="conflict-item">
+      <div class="conflict-badge-wrap">
+        <span class="conflict-day">3/17 二</span>
+        <span class="conflict-time">11:00<br>–11:40</span>
+      </div>
+      <div class="conflict-info">
+        <div class="conflict-title">📡 Telecom Special Address: The AI Grid [S82003]</div>
+        <div class="conflict-detail">Montgomery Theater　｜　Ronnie Vasishta, Sr. VP Telecommunications, NVIDIA　🔴 Live Stream 可補看<br>Telco 如何建構 AI Grid：BlueField DPU、AI-RAN、6G、自主網路，探討電信業在 AI 時代的全新定位</div>
+        <div class="conflict-reason">⚠️ 衝突：與 Jensen Huang Press Q&amp;A（11:00 入場、11:30 關門）時間完全重疊，優先 Jensen Q&A</div>
+      </div>
+    </div>
+
+    <div class="conflict-item">
+      <div class="conflict-badge-wrap">
+        <span class="conflict-day">3/17 二</span>
+        <span class="conflict-time">16:00<br>–16:40</span>
+      </div>
+      <div class="conflict-info">
+        <div class="conflict-title">🤖 The State of Open Source AI [S81791]</div>
+        <div class="conflict-detail">SJCC LL20CD (LL)　｜　Jonathan Cohen（NVIDIA）、Vartika Singh（NVIDIA）、Ying Sheng（RadixArk）、Ion Stoica（UC Berkeley）、Jeff Boudier（Hugging Face）、Ranjay Krishna（Ai2）　🔴 Live Stream 可補看<br>開源 AI 現況：模型訓練、微調、部署的突破，以及 multi-modal &amp; agent-driven AI 的未來</div>
+        <div class="conflict-reason">⚠️ 衝突：與 Nokia AI-RAN EX82388（16:00–16:15）及 PwC EX82433（16:20–16:35）時間重疊</div>
+      </div>
+    </div>
+
+    <div class="conflict-item">
+      <div class="conflict-badge-wrap">
+        <span class="conflict-day">3/17 二</span>
+        <span class="conflict-time">16:00<br>–16:15</span>
+      </div>
+      <div class="conflict-info">
+        <div class="conflict-title">📡 GPU-Accelerated AI-RAN powered by Nokia &amp; NVIDIA [EX82388]</div>
+        <div class="conflict-detail">SJCC Grand Ballroom Theater (L2)　｜　Aji Ed, Head of AI-RAN, Nokia<br>Nokia × NVIDIA 深度整合 GPU 至無線接取網路（RAN），6G 邊緣運算加速</div>
+        <div class="conflict-reason">⚠️ 衝突：與 PwC EX82433（16:20–16:35）及 Open Source AI S81791（16:00–16:40）時間重疊，三場撞期</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     旅行準備清單 / 注意事項
+════════════════════════════════════════════════════ -->
+<div class="prep-section">
+  <div class="prep-header">
+    ✅ 美加州 GTC 行程準備清單 &amp; 注意事項
+    <span class="prep-header-sub">勾選完成項目・進度會自動更新</span>
+  </div>
+  <div class="prep-body">
+
+    <!-- ① 證件 & 出入境 -->
+    <div class="prep-group">
+      <div class="prep-group-title">🛂 證件 &amp; 出入境</div>
+      <div class="prep-item"><input type="checkbox" id="c1"><label for="c1">護照有效期限確認（需剩餘 6 個月以上）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="c2"><label for="c2">美簽（ESTA 免簽 或 B1/B2 簽證）確認有效</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="c3"><label for="c3">ESTA 申請確認（如使用免簽，需提前申請）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="c8"><label for="c8">ESTA 確認信截圖 &amp; 號碼記錄（CBP 系統故障時備用）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="c4"><label for="c4">列印 / 手機儲存機票確認信（BR018 / BR007）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="c5"><label for="c5">BR018 訂位代號備妥：DTG8ZY</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="c7"><label for="c7">GTC 媒體通行證資格確認 &amp; 攜帶相關證明文件</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="c6"><label for="c6">海關申報表（美國 CBP 可線上預填 Mobile Passport Control App）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="c9"><label for="c9">護照影本（正反面）紙本 + 雲端備份（遺失時快速補辦）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="c10"><label for="c10">台北駐舊金山經文處緊急電話備妥（415-362-7680）</label><span class="badge badge-note">建議</span></div>
+    </div>
+
+    <!-- ② GTC 會議準備 -->
+    <div class="prep-group">
+      <div class="prep-group-title">🎟 GTC 會議準備</div>
+      <div class="prep-item"><input type="checkbox" id="g1"><label for="g1">GTC 2026 帳號登入確認（注意領取通行證截止 3/15 19:00 PDT）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="g2"><label for="g2">已加入 Session 行程表（S81595 Keynote 等）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="g3"><label for="g3">Jensen Huang Press Q&amp;A 媒體資格確認 &amp; 報到須知（10:45 報到）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="g4"><label for="g4">NVIDIA Booth 媒體預覽邀請函備妥</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="g8"><label for="g8">確認 3/18–3/20 是否有其他媒體專用採訪 slot / 廠商媒體見面會</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="g5"><label for="g5">GTC App 下載並熟悉場地地圖（SAP Center / SJCC / 週邊飯店）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="g6"><label for="g6">名片（採訪 / 交流用）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="g7"><label for="g7">採訪問題 / 提問大綱事先準備（Jensen Q&amp;A）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="g9"><label for="g9">GTC 官方 Embargo 時間表確認（產品發布禁發時間）</label><span class="badge badge-note">建議</span></div>
+    </div>
+
+    <!-- ③ 交通 & 住宿 -->
+    <div class="prep-group">
+      <div class="prep-group-title">🚗 交通 &amp; 住宿</div>
+      <div class="prep-item"><input type="checkbox" id="t1"><label for="t1">SFO → San Jose 交通安排（Uber / Lyft / Super Shuttle）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="t2"><label for="t2">飯店預訂確認（地址 &amp; Check-in 時間）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="t6"><label for="t6">飯店名稱、地址、電話、WiFi 帳密存至手機 &amp; 紙本備份</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="t7"><label for="t7">確認飯店 24hr Check-in（3/15 約 18:30–19:00 才抵達）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="t5"><label for="t5">3/15 抵達 SFO 後清關預計 1–1.5 小時，車程 45–60 分鐘，確認通行證領取時間充足</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="t3"><label for="t3">Uber / Lyft App 確認可用（美國手機號或信用卡）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="t4"><label for="t4">SAP Center ↔ SJCC ↔ 周邊飯店路線熟悉</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="t8"><label for="t8">GTC 官方會場班車時間表 &amp; 上車地點確認</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="t9"><label for="t9">3/20 回程撤離：最遲 07:00–07:30 離飯店，預約 Uber 或班車前往 SFO</label><span class="badge badge-note">建議</span></div>
+    </div>
+
+    <!-- ④ 電子設備 & 充電 -->
+    <div class="prep-group">
+      <div class="prep-group-title">🔌 電子設備 &amp; 充電</div>
+      <div class="prep-item"><input type="checkbox" id="e1"><label for="e1">筆記型電腦 &amp; 充電器</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="e2"><label for="e2">相機 / 攝影設備（媒體採訪用）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="e3"><label for="e3">手機 &amp; 充電線（確認美國電壓 110V 相容）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="e4"><label for="e4">行動電源（飛機禁放托運，需隨身攜帶）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="e5"><label for="e5">錄音筆 / 採訪麥克風</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="e7"><label for="e7">記憶卡 / 備份硬碟（採訪素材備份）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="e8"><label for="e8">相機備用電池 1–2 組（展場整天拍攝耗電快）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="e9"><label for="e9">USB-C / Lightning 快充線備用各 1 條（線材易損壞或遺失）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="e6"><label for="e6">萬用轉接插頭（美國 A 型，台灣一般可直接使用）</label><span class="badge badge-rec">備用</span></div>
+    </div>
+
+    <!-- ⑤ 金錢 & 信用卡 -->
+    <div class="prep-group">
+      <div class="prep-group-title">💳 金錢 &amp; 信用卡</div>
+      <div class="prep-item"><input type="checkbox" id="m1"><label for="m1">告知銀行出國日期，避免信用卡被鎖</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="m3"><label for="m3">Visa / Mastercard 國際信用卡確認可用</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="m2"><label for="m2">備妥美金現金（小費、緊急現金，建議 $200–300）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="m4"><label for="m4">Apple Pay / Google Pay 設定確認</label><span class="badge badge-rec">備用</span></div>
+      <div class="prep-item"><input type="checkbox" id="m5"><label for="m5">緊急國際轉帳方式備妥（親友手機號、Wise / PayPal 帳號）</label><span class="badge badge-rec">備用</span></div>
+    </div>
+
+    <!-- ⑥ 通訊 & 網路 -->
+    <div class="prep-group">
+      <div class="prep-group-title">📶 通訊 &amp; 網路</div>
+      <div class="prep-item"><input type="checkbox" id="n1"><label for="n1">國際漫遊方案開通 或 購買美國 eSIM / SIM 卡</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="n5"><label for="n5">美國 eSIM 具體購買 &amp; 啟用計畫（建議出發前線上購買，落地即可用）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="n2"><label for="n2">GTC 現場 Wi-Fi 備份方案（建議不完全依賴會場 Wi-Fi）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="n3"><label for="n3">Jensen Q&amp;A Wi-Fi 資訊備妥：GTC_Signia｜GTC2026!</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="n6"><label for="n6">台灣電信客服 24hr 電話備妥（中華電信 0800-080-090 等）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="n4"><label for="n4">VPN 確認（如需翻牆或加密連線）</label><span class="badge badge-rec">備用</span></div>
+    </div>
+
+    <!-- ⑦ 行李 & 衣物 -->
+    <div class="prep-group">
+      <div class="prep-group-title">🧳 行李 &amp; 衣物</div>
+      <div class="prep-item"><input type="checkbox" id="l5"><label for="l5">液體隨身行李規定確認（手提 ≤100ml）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="l6"><label for="l6">行李重量確認（台灣→美國：23kg/件 × 2 件免費託運）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="l1"><label for="l1">San Jose 3月氣溫約 10–20°C，準備外套 / 薄外套</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="l2"><label for="l2">會議正式場合服裝（媒體晚宴、採訪用）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="l3"><label for="l3">輕便鞋（展場行走一整天）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="l4"><label for="l4">隨身小包（會場內帶筆電、設備用）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="l7"><label for="l7">折傘 / 防水外套（3 月加州雨季，天氣多變）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="l8"><label for="l8">飛行舒適用品：頸枕、耳塞、眼罩、壓力襪（11 小時長途）</label><span class="badge badge-note">建議</span></div>
+    </div>
+
+    <!-- ⑧ 健康 & 保險 -->
+    <div class="prep-group">
+      <div class="prep-group-title">🏥 健康 &amp; 保險</div>
+      <div class="prep-item"><input type="checkbox" id="h1"><label for="h1">旅遊保險投保確認（含醫療、行李遺失）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="h5"><label for="h5">旅遊保險保單號碼 &amp; 理賠 24hr 電話存至手機 &amp; 紙本</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="h2"><label for="h2">常備藥品（感冒藥、腸胃藥、止痛藥）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="h4"><label for="h4">時差調整：飛行 11 小時，抵達後盡量當地時間作息</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="h6"><label for="h6">褪黑激素（Melatonin）或安眠藥備妥（時差調整輔助）</label><span class="badge badge-note">建議</span></div>
+      <div class="prep-item"><input type="checkbox" id="h3"><label for="h3">口罩（視個人需求）</label><span class="badge badge-rec">備用</span></div>
+    </div>
+
+    <!-- ⑨ 重要注意事項 -->
+    <div class="prep-group">
+      <div class="prep-group-title">⚠️ 重要注意事項</div>
+      <div class="prep-item"><input type="checkbox" id="w1"><label for="w1">3/15 GTC 通行證 19:00 前必須完成領取，不能延誤</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="w2"><label for="w2">Jensen Q&amp;A 11:30 關門，需 10:45 前完成報到進場</label><span class="badge badge-must">必備</span></div>
+
+      <div class="prep-item"><input type="checkbox" id="w6"><label for="w6">回程 BR007 3/20 12:00 起飛，建議 09:00 前抵達 SFO 機場</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="w7"><label for="w7">媒體資格證件 / 記者證原件攜帶確認（敏感採訪可能查驗）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="w9"><label for="w9">採訪對象確切位置 &amp; 聯絡方式確認（Coatue Nick / Raymond James Victor / Ed Sun）</label><span class="badge badge-must">必備</span></div>
+      <div class="prep-item"><input type="checkbox" id="w4"><label for="w4">美國小費文化：餐廳 18–20%、計程車 15%</label><span class="badge badge-note">注意</span></div>
+      <div class="prep-item"><input type="checkbox" id="w5"><label for="w5">入境海關：電子產品、食物申報確認（台灣食品謹慎攜帶）</label><span class="badge badge-note">注意</span></div>
+      <div class="prep-item"><input type="checkbox" id="w8"><label for="w8">採訪素材傳回編輯部流程確認（FTP / 雲端 / 郵件地址）</label><span class="badge badge-note">建議</span></div>
+    </div>
+
+  </div><!-- /prep-body -->
+
+  <div class="prep-progress">
+    <span id="progressText">0 / 0 完成</span>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+    <span id="progressPct" style="white-space:nowrap;font-weight:bold;">0%</span>
+  </div>
+</div><!-- /prep-section -->
+
+<script>
+// Checklist progress bar
+(function(){
+  function updateProgress(){
+    const all     = document.querySelectorAll('.prep-item input[type="checkbox"]');
+    const checked = document.querySelectorAll('.prep-item input[type="checkbox"]:checked');
+    const pct     = all.length ? Math.round(checked.length / all.length * 100) : 0;
+    document.getElementById('progressText').textContent = `${checked.length} / ${all.length} 完成`;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressPct').textContent  = pct + '%';
+  }
+  document.querySelectorAll('.prep-item input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', updateProgress);
+  });
+  updateProgress();
+})();
+</script>
+
+<script>
+const PDT_OFFSET = 15;
+// Start at 04:00 to capture the 04:50 PDT departure (= TST 19:50)
+const START_HOUR = 4;
+const END_HOUR   = 23;
+const hours = [];
+for (let h = START_HOUR; h <= END_HOUR; h++) hours.push(h);
+
+// Keys: "hourIndex-dayIndex"
+// Hour index: 04:00=0, 05:00=1, ..., 16:00=12, 12:00=8
+// Day index: Sun 3/15=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri 3/20=5
+const flightEvents = {
+  // 3/15 Sun – BR018 取飛 TPE (PDT 04:50 ≈ 04:00 slot, TST 3/15 19:50)
+  '0-0': {
+    type: 'take-off',
+    fn:   '✈️ BR018 起飛 TPE → SFO',
+    detail: '台北桃園機場 航站2　TST 19:50\n≈ 美西時間 04:50 PDT　經濟艙（W）'
+  },
+  // In-flight rows: index 1 (05:00) through 11 (15:00)
+  '1-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '2-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '3-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '4-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '5-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '6-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '7-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '8-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '9-0':  { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '10-0': { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  '11-0': { type: 'inflight', text: '✈️ BR018 飛行中　TPE → SFO' },
+  // 3/15 Sun PDT 16:00 → index 12
+  '12-0': {
+    type: 'arrive',
+    fn:   '✈️ BR018 抵達 SFO',
+    detail: '舊金山國際機場（國際線）\n美西時間 16:00 PDT　飛行 11小時10分'
+  },
+  // 3/15 Sun PDT 17:00 → index 13: customs & baggage
+  '13-0': {
+    type: 'customs',
+    fn:   '🛄 入境清關 & 提領行李',
+    detail: '國際線入境手續・預計需 1–1.5 小時'
+  },
+  // 3/15 Sun PDT 17:30 → 沒有整點格，用 18:00 (index 14) 標示出發
+  '14-0': {
+    type: 'transit',
+    fn:   '🚗 前往 GTC 會議現場',
+    detail: 'SFO → San Jose Convention Center\n預計車程約 45–60 分鐘'
+  },
+  // 3/15 Sun PDT 19:00 → index 15: GTC deadline
+  '15-0': {
+    type: 'deadline',
+    fn:   '⚠️ GTC 通行證領取截止 19:00',
+    detail: 'NVIDIA GTC 2026・請於 19:00 前完成報到'
+  },
+  // 3/16 Mon GTC Keynote 11:00–13:00 → index 7 & 8, day 1
+  '7-1': {
+    type: 'session',
+    fn:   '🎤 NVIDIA GTC Keynote [S81595]',
+    detail: '11:00–13:00　SAP Center\nJensen Huang, Founder & CEO, NVIDIA'
+  },
+  '8-1': {
+    type: 'session',
+    fn:   '🎤 NVIDIA GTC Keynote 續',
+    detail: '（接上場）結束 13:00　SAP Center'
+  },
+  // 3/16 Mon 13:30–14:00 → PDT 13:00 slot, index 9, day 1
+  '9-1': {
+    type: 'meeting',
+    fn:   '☕ Coatue – Nick',
+    detail: '13:30–14:00　Voltaire Coffee Shop'
+  },
+  // 3/16 Mon 14:15–14:45 → PDT 14:00 slot, index 10, day 1
+  '10-1': {
+    type: 'meeting',
+    fn:   '☕ Raymond James – Victor',
+    detail: '14:15–14:45　Voltaire Coffee Shop'
+  },
+  // 3/16 Mon 15:00–15:40 → PDT 15:00 slot, index 11, day 1
+  '11-1': {
+    type: 'session',
+    fn:   '🌐 NVIDIA: Giga-Scale AI Networking [S81561]',
+    detail: '15:00–15:40　Gilad Shainer, SVP Networking, NVIDIA\nQuantum-X InfiniBand / Spectrum-X Ethernet'
+  },
+  // 3/16 Mon 16:00–16:40 → index 12, day 1
+  '12-1': {
+    type: 'session',
+    fn:   '🖥 NVIDIA: Inference Platform [S81911]',
+    detail: '16:00–16:40　Montgomery Theater\nVP Hyperscale & HPC, NVIDIA'
+  },
+  // 3/16 Mon 16:40–16:55 → index 13, day 1 (put in 17:00 slot, note actual time)
+  '13-1': {
+    type: 'session',
+    fn:   '⚡ LITEON 800 VDC / Vera Rubin [EX82089]',
+    detail: '16:40–16:55　SJCC Grand Ballroom Theater (L2)\n⚠️ 緊接上場，需立刻前往'
+  },
+  // 3/16 Mon 17:00–17:40 → index 14 (18:00 slot, noting actual time), day 1
+  '14-1': {
+    type: 'session',
+    fn:   '💛 NVIDIA: GPU ♥ LPU [S82419]',
+    detail: '17:00–17:40　SJCC LL21AB (LL)\nChief SW Architect, NVIDIA × Founder, Founders Podcast'
+  },
+  // 3/17 Tue 9:00–10:30 → indices 5 & 6, day 2
+  '5-2': {
+    type: 'press',
+    fn:   '📸 NVIDIA Booth 媒體專屬預覽',
+    detail: '9:00–10:00　NVIDIA Booth, SJCC\n⚠️ 請於 9:55 前離開以趕赴 Delta 場次'
+  },
+  '6-2': {
+    type: 'session',
+    fn:   '⚡ Delta: 800 VDC & Modular DC [S82097]',
+    detail: '10:00–10:40　SJCC 230C (L2)\nR&D Director, Delta Custom Design BU'
+  },
+  // 3/17 Tue Jensen Huang Press Q&A 11:30–13:00 → indices 7 & 8, day 2
+  '7-2': {
+    type: 'press',
+    fn:   '🎙 Jensen Huang Press Q&A',
+    detail: '報到 10:45 | 入場 11:00 | ⚠️ 11:30 關門\nSignia Hotel, Imperial Ballroom 2F\nWi-Fi: GTC_Signia｜GTC2026!'
+  },
+  '8-2': {
+    type: 'press',
+    fn:   '🎙 Jensen Q&A 續',
+    detail: '結束 13:00　170 S Market St, San Jose'
+  },
+  // 3/17 Tue 17:00–18:00 → PDT 17:00 slot, index 13, day 2
+  '13-2': {
+    type: 'meeting',
+    fn:   '🍽 Ed Sun – Freestone',
+    detail: "17:00–18:00　Scott's Seafood Bar"
+  },
+  // 3/18 Wed GTC Taiwan Media Dinner 18:30 → index 14, day 3
+  '14-3': {
+    type: 'dinner',
+    fn:   '🍝 GTC 台灣媒體餐敘',
+    detail: '18:30　The Old Spaghetti Factory\n51 N San Pedro St, San Jose'
+  },
+  // ── 3/17 TUE additional sessions ──
+  // Delta 800 VDC [S82097] 10:00–10:40 → index 6, day 2 ⚠️ CONFLICTS with Booth Preview (9:00–10:30)
+  // [skipped from grid – flagged to user]
+  // Astera Labs [EX82087] 1:00–1:15 PM → index 9, day 2
+  '9-2': {
+    type: 'session',
+    fn:   '🔗 Astera Labs Rack Connectivity [EX82087]',
+    detail: '13:00–13:15　SJCC Hall 1 Theater (L2)\nBlackwell & Rubin rack-scale connectivity'
+  },
+  // HUMAIN-AWS [S82355] 2:00–2:40 PM → index 10, day 2
+  '10-2': {
+    type: 'session',
+    fn:   '☁️ HUMAIN-AWS AI Factory [S82355]',
+    detail: '14:00–14:40　Hilton Almaden 1&2 (L1)\nSovereign AI infra w/ GB300 GPUs'
+  },
+  // Grace to Vera [S81680] 3:00–3:40 PM → index 11, day 2
+  '11-2': {
+    type: 'session',
+    fn:   '🧠 NVIDIA: Grace → Vera CPU [S81680]',
+    detail: '15:00–15:40　Hyatt Place Salon I (L1)\nNVIDIA next-gen data center CPU'
+  },
+  // PwC [EX82433] 4:20–4:35 PM → index 12, day 2
+  '12-2': {
+    type: 'session',
+    fn:   '📊 PwC: Accelerated Compute Priority [EX82433]',
+    detail: '16:20–16:35　SJCC Hall 1 Theater (L2)\nGPU allocation framework'
+  },
+
+  // ── 3/18 WED sessions ──
+  // Build Flexible Power [S81685] 9:00–9:40 AM → index 5, day 3
+  '5-3': {
+    type: 'session',
+    fn:   '⚡ NVIDIA: Flexible Power Infrastructure [S81685]',
+    detail: '9:00–9:40　SJCC LL21F (LL)\nNVIDIA + partners: chip to grid'
+  },
+  // NVIDIA Research [S82168] 10:00–10:40 AM → index 6, day 3
+  '6-3': {
+    type: 'session',
+    fn:   '🔬 NVIDIA Research Insights [S82168]',
+    detail: '10:00–10:40　Montgomery Theater\nChief Scientist & SVP of Research, NVIDIA'
+  },
+  // Schneider Electric 800 VDC [S82090] 11:00–11:40 AM → index 7, day 3
+  '7-3': {
+    type: 'session',
+    fn:   '🔌 Schneider: 1MW Rack & 800 VDC [S82090]',
+    detail: '11:00–11:40　Marriott Willow Glen I-III (L2)\nCTO, Data Center Business'
+  },
+  // ── 3/19 THU sessions & expo ──
+  // VAST Data session 11:00–11:40
+  '7-4': {
+    type: 'session',
+    fn:   '🧱 VAST Data: Long-Context Inference [S82255]',
+    detail: '11:00–11:40　Hilton Almaden 1&2 (L1)\nNVIDIA Dynamo KV Block Manager'
+  },
+  // Expo 12:00–14:00 only
+  '8-4': { type: 'expo', fn: '🏛 GTC 展覽參觀', detail: '12:00–13:00　SJCC 展覽館' },
+  '9-4': { type: 'expo', fn: '🏛 GTC 展覽參觀', detail: '13:00–14:00　SJCC 展覽館' },
+
+  // 3/20 Fri PDT 12:00 → index 8 (since 04:00=0, 12:00=8)
+  '8-5': {
+    type: 'depart-return',
+    fn:   '✈️ BR007 起飛 SFO → TPE',
+    detail: '舊金山國際機場（國際線）\n美西時間 12:00 PDT　經濟艙（B）\n抵達台北 3/21（六）17:10 TST'
+  }
+};
+
+const tbody = document.getElementById('calBody');
+
+hours.forEach((pdt, idx) => {
+  const rawTst = pdt + PDT_OFFSET;
+  const tst     = rawTst % 24;
+  const nextDay = rawTst >= 24;
+  const alt     = idx % 2 === 0;
+
+  const tr = document.createElement('tr');
+
+  // PDT cell
+  const pdtTd = document.createElement('td');
+  pdtTd.className = 'pdt';
+  pdtTd.textContent = `${String(pdt).padStart(2,'0')}:00`;
+  tr.appendChild(pdtTd);
+
+  // TST cell
+  const tstTd = document.createElement('td');
+  tstTd.className = 'tst' + (nextDay ? ' next-day' : '');
+  tstTd.textContent = `${String(tst).padStart(2,'0')}:00` + (nextDay ? ' (+1)' : '');
+  tr.appendChild(tstTd);
+
+  // 6 day cells
+  for (let d = 0; d < 6; d++) {
+    const td  = document.createElement('td');
+    const key = `${idx}-${d}`;
+    const evt = flightEvents[key];
+    const isSun = d === 0;
+
+    if (evt) {
+      td.className = 'event';
+      if (evt.type === 'inflight') {
+        const div = document.createElement('div');
+        div.className = 'inflight-block';
+        div.textContent = evt.text;
+        td.appendChild(div);
+      } else if (evt.type === 'deadline') {
+        const div = document.createElement('div');
+        div.className = 'deadline-block';
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      } else if (evt.type === 'session') {
+        const div = document.createElement('div');
+        div.className = 'session-block';
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      } else if (evt.type === 'meeting') {
+        const div = document.createElement('div');
+        div.className = 'meeting-block';
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      } else if (evt.type === 'press') {
+        const div = document.createElement('div');
+        div.className = 'press-block';
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      } else if (evt.type === 'dinner') {
+        const div = document.createElement('div');
+        div.className = 'dinner-block';
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      } else if (evt.type === 'expo') {
+        const div = document.createElement('div');
+        div.className = 'expo-block';
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      } else if (evt.type === 'customs' || evt.type === 'transit') {
+        const div = document.createElement('div');
+        div.className = `schedule-block ${evt.type}`;
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      } else {
+        const div = document.createElement('div');
+        div.className = `flight-block ${evt.type}`;
+        div.innerHTML =
+          `<div class="fn">${evt.fn}</div>` +
+          `<div class="detail">${evt.detail.replace(/\n/g, '<br>')}</div>`;
+        td.appendChild(div);
+      }
+    } else {
+      td.className = 'event' + (isSun ? ' sun' : '') + (alt ? ' alt' : '');
+      const div = document.createElement('div');
+      div.contentEditable = 'true';
+      td.appendChild(div);
+    }
+
+    tr.appendChild(td);
+  }
+
+  tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
